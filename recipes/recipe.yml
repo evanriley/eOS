@@ -3,7 +3,7 @@
 # image will be published to ghcr.io/<user>/<name>
 name: eOS
 # description will be included in the image's metadata
-description: This is my personal OS image.
+description: Personalized atomic Fedora with Niri window manager, optimized for developer workflow with Fish shell, Foot terminal, and comprehensive tooling.
 
 # the base image to build on top of (FROM) and the version tag to use
 base-image: ghcr.io/ublue-os/silverblue-main
@@ -16,21 +16,101 @@ modules:
     files:
       - source: system
         destination: / # copies files/system/* (* means everything inside it) into your image's root folder /
+      - source: scripts
+        destination: /usr/local/bin # copies files/scripts/* to /usr/local/bin
 
   - type: dnf
     repos:
       copr:
         - atim/starship
+        - solopasha/hyprland  # For Wayland utilities
     install:
       packages:
-        - micro
+        # Core system and window management
+        - niri
+        - foot
+        - swaylock
+        - swaylock-effects
+        - swww
+        - wl-clipboard
+        - xdg-desktop-portal-wlr
+        - seatd
+        
+        # Shell and terminal
+        - fish
         - starship
+        - zoxide
+        - mise
+        - eza
+        - bat
+        - dust
+        
+        # Development tools
+        - git
+        - git-delta
+        - neovim
+        - gh
+        - ripgrep
+        - fd-find
+        - fzf
+        
+        # Utilities
+        - btop
+        - pavucontrol
+        - rofi
+        - rofi-wayland
+        - bemenu
+        - bemenu-wayland
+        - playerctl
+        - wireplumber
+        - pipewire-pulseaudio
+        - qt5-qtwayland
+        - qt6-qtwayland
+        
+        # Theming and fonts
+        - bibata-cursors
+        - adwaita-cursors
+        - gnome-themes-extra
+        - fira-code-fonts
+        - jetbrains-mono-fonts
+        - google-noto-fonts
+        
+        # File management
+        - nautilus
+        - gvfs
+        - gvfs-afc
+        - gvfs-goa
+        - gvfs-google
+        - gvfs-gphoto2
+        - gvfs-mtp
+        - gvfs-smb
+        
+        # Multimedia
+        - ffmpeg
+        - mpv
+        - imagemagick
+        
+        # System monitoring
+        - inxi
+        - htop
+        - lsof
+        - net-tools
+        
+        # ISO generation tools
+        - lorax
+        - livecd-tools
+        - isomd5sum
+        - jq
+        
     remove:
       packages:
-        # example: removing firefox (in favor of the flatpak)
-        # "firefox" is the main package, "firefox-langpacks" is a dependency
-        - firefox
-        - firefox-langpacks # also remove firefox dependency (not required for all packages, this is a special case)
+        # Remove default GNOME apps we won't use
+        - gnome-terminal
+        - gnome-terminal-nautilus
+        - evolution
+        - cheese
+        - simple-scan
+        - totem
 
   - type: default-flatpaks
     configurations:
@@ -40,6 +120,14 @@ modules:
         install: # system flatpaks we want all users to have and not remove
           - org.mozilla.firefox
           - org.gnome.Loupe
+          - com.discordapp.Discord
+          - com.valvesoftware.Steam
+          - org.mozilla.Thunderbird
+          - com.borgbase.Vorta
+          - org.nicotine_plus.Nicotine
+          - com.github.tchx84.Flatseal
+          - io.github.shiftey.Desktop
+          - com.mattjakeman.ExtensionManager
       - scope: user # Also add Flathub user repo, but no user packages
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully

@@ -1,0 +1,23 @@
+[Unit]
+Description=Niri Wayland Compositor Session
+After=graphical-session-pre.target
+Wants=graphical-session-pre.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/niri
+Restart=on-failure
+RestartSec=5
+Environment=XDG_RUNTIME_DIR=/run/user/%i
+Environment=DISPLAY=:0
+Environment=WLR_DRM_DEVICES=/dev/dri/card0
+Environment=WLR_RENDERER=vulkan
+Environment=XDG_SESSION_TYPE=wayland
+Environment=XDG_CURRENT_DESKTOP=niri
+Environment=QT_QPA_PLATFORM=wayland
+Environment=SDL_VIDEODRIVER=wayland
+Environment=CLUTTER_BACKEND=wayland
+Environment=MOZ_ENABLE_WAYLAND=1
+
+[Install]
+WantedBy=graphical-session.target
