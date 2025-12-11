@@ -23,14 +23,16 @@ modules:
     repos:
       copr:
         - atim/starship
-        - solopasha/hyprland  # For Wayland utilities
+        - atim/bemenu  # For bemenu-wayland
+        - zeno/eza     # For eza (modern ls)
+        - mike-bonner/swww  # For swww (wallpaper daemon)
+        - mike-bonner/cursors  # For cursor themes
     install:
       packages:
         # Core system and window management
         - niri
         - foot
         - swaylock
-        - swaylock-effects
         - swww
         - wl-clipboard
         - xdg-desktop-portal-wlr
@@ -40,7 +42,6 @@ modules:
         - fish
         - starship
         - zoxide
-        - mise
         - eza
         - bat
         - dust
@@ -58,7 +59,6 @@ modules:
         - btop
         - pavucontrol
         - rofi
-        - rofi-wayland
         - bemenu
         - bemenu-wayland
         - playerctl
@@ -73,14 +73,12 @@ modules:
         - gnome-themes-extra
         - fira-code-fonts
         - jetbrains-mono-fonts
-        - google-noto-fonts
         
         # File management
         - nautilus
         - gvfs
         - gvfs-afc
         - gvfs-goa
-        - gvfs-google
         - gvfs-gphoto2
         - gvfs-mtp
         - gvfs-smb
@@ -88,7 +86,7 @@ modules:
         # Multimedia
         - ffmpeg
         - mpv
-        - imagemagick
+        - ImageMagick
         
         # System monitoring
         - inxi

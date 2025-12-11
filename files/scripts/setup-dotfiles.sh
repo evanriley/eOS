@@ -297,7 +297,18 @@ end
 EOF
 
 echo ""
-echo "8. Creating basic utility scripts..."
+echo "8. Installing mise (not available in COPR)..."
+
+# Install mise since it's not available in Fedora/COPR
+if ! command -v mise >/dev/null; then
+    echo "   Installing mise..."
+    curl https://mise.run | sh || echo "   Failed to install mise, you can install it manually later"
+else
+    echo "   mise is already installed"
+fi
+
+echo ""
+echo "9. Creating basic utility scripts..."
 
 # Create basic appdrawer script
 cat > "$HOME/.local/bin/appdrawer" << 'EOF'

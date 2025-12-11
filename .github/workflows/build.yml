@@ -29,7 +29,40 @@ jobs:
           # !! Add your recipes here
           - recipe.yml
     steps:
-      # the build is fully handled by the reusable github action
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Install cosign with retry
+        id: install-cosign
+        run: |
+          # Install cosign with retry logic
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+          
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i to install cosign..."
+            
+            # Try to install cosign using go install
+            go install github.com/sigstore/cosign/v2/cmd/cosign@latest && break
+            
+            if [ $i -eq $MAX_RETRIES ]; then
+              echo "Failed to install cosign after $MAX_RETRIES attempts"
+              exit 1
+            fi
+            
+            echo "Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+          done
+          
+          # Add cosign to PATH
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+          echo "Cosign installed successfully: $(cosign version)"
+
       - name: Build Custom Image
         uses: blue-build/github-action@v1.10
         with:
@@ -40,3 +73,12 @@ jobs:
 
           # enabled by default, disable if your image is small and you want faster builds
           maximize_build_space: true
+
+      - name: Verify cosign installation
+        if: always()
+        run: |
+          if command -v cosign >/dev/null; then
+            echo "Cosign is available: $(cosign version)"
+          else
+            echo "Cosign is not available"
+          fi
